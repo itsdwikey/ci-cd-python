@@ -46,7 +46,8 @@ curl -X 'POST' \
 - Ensure port 80 is available
 ```
 sudo yum update -y
-sudo amazon-linux-extras install docker -y
+<!-- sudo amazon-linux-extras install docker -y -->
+sudo dnf install -y docker
 sudo service docker start
 sudo systemctl start docker
 sudo service docker status
