@@ -1,28 +1,31 @@
-FROM python:3.10-slim-buster
+FROM python:3.10-slim
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip 
-#copy to code directory
-COPY . /code 
+# Upgrade pip
+RUN pip install --upgrade pip
 
-#set permissions
+# Set working directory
+WORKDIR /code
 
-RUN chmod +x /code
+# Copy project
+COPY . /code
 
-RUN pip install --no-cache-dir --upgrade -r code/requirements.txt
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
+# If your project itself needs to be installed
+RUN pip install -e .
+
+# Expose application port
 EXPOSE 8005
 
-WORKDIR /code
+# Python import path
+ENV PYTHONPATH=/code
 
-ENV PYTHONPATH "${PYTHONPATH}:/code"
-
-CMD pip install -e .
-
-CMD ["python","prediction_model/training_pipeline.py"]
-WORKDIR /code
-CMD ["python","main.py"]
+# Start application
+CMD ["python", "main.py"]
